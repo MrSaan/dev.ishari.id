@@ -15,7 +15,6 @@ import {PencilSquareIcon, TrashIcon} from "@heroicons/vue/20/solid";
 const loading = ref(false)
 const messageResponse = ref<ResponseServer | null>(null)
 const showResponse = ref(false)
-const shalawatList = ref<ShalawatList[]>([])
 const muhudList = ref<MuhudList[]>([])
 const textShalawat = ref<ShalawatList[]>([])
 const shalawatEdit = ref<FormShalawat>({

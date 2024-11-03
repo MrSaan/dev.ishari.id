@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
@@ -28,7 +29,7 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
     // route helper
-    Route::get('/dashboard/get-info', []);
+    Route::get('/dashboard/get-info', [DashboardController::class, 'information']);
 });
 
 require __DIR__.'/auth.php';
