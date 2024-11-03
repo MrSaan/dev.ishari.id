@@ -62,8 +62,8 @@ class ShalawatController extends Controller
                 'transliteration' => $request->transliteration,
                 'is_diwan' => $request->isDiwan ? 'Y' : 'N',
                 'is_diba' => $request->isDiba ? 'Y' : 'N',
-                'created_by' => $user->name,
-                'updated_by' => $user->name,
+                'created_by' => $user->name ?? null,
+                'updated_by' => $user->name ?? null,
             ]);
 
             return to_route('shalawat.index');
@@ -99,8 +99,10 @@ class ShalawatController extends Controller
 
             $shalawat->translate_id = $requestValidate['translateId'];
             $shalawat->transliteration = $requestValidate['transliteration'];
-            $shalawat->updated_by = $user->name;
+            $shalawat->updated_by = $user->name ?? null;
             $shalawat->save();
+
+            return to_route('shalawat.index');
 
         } catch (\Exception $error) {
             return redirect()->back()->withErrors([
@@ -143,11 +145,12 @@ class ShalawatController extends Controller
                     $query->where('name', '=', $name);
                 })
                 ->with('audios')
+                ->orderBy('position', 'asc')
                 ->get();
 
             return response()->json([
                 'status' => 'success',
-                'data' => $data
+                'data' => ShalawatListResource::collection($data)
             ]);
 
         } catch (\Exception $error) {
