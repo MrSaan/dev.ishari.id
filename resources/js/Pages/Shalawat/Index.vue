@@ -10,6 +10,7 @@ import LoadingBanner from "@/Components/LoadingBanner.vue";
 import Dropdown from "@/Components/Dropdown.vue";
 import InputLabel from "@/Components/InputLabel.vue";
 import {PencilSquareIcon, TrashIcon} from "@heroicons/vue/20/solid";
+import {Tab, TabGroup, TabList, TabPanel, TabPanels} from "@headlessui/vue";
 
 // variable
 const loading = ref(false)
@@ -165,43 +166,117 @@ const selectMuhud = (item: MuhudList) => {
                     </div>
                 </div>
 
-                <div class="overflow-auto p-4 mt-10 bg-white shadow-sm sm:rounded-lg">
-                    <table class="min-w-full table-auto">
-                        <thead>
-                        <tr class="border-b-2">
-                            <th class="py-2 border-b font-medium text-left px-2 sm:px-0">Urutan</th>
-                            <th class="py-2 border-b font-medium text-left px-2 sm:px-0">Muhud</th>
-                            <th class="py-2 border-b font-medium text-left px-2 sm:px-0">Teks</th>
-                            <th class="py-2 border-b font-medium text-left px-2 sm:px-0">Kitab</th>
-                            <th class="py-2 border-b font-medium text-left px-2 sm:px-0">Terjemahan</th>
-                            <th class="py-2 border-b font-medium text-left px-2 sm:px-0">Transliterasi</th>
-                            <th class="py-2 border-b font-medium text-center px-2 sm:px-0">Action</th>
-                        </tr>
-                        </thead>
-                        <tbody v-if="textShalawat && textShalawat.length > 0">
-                        <tr v-for="item in textShalawat" class="border-b-2 hover:bg-slate-200">
-                            <td class="py-2 px-2 text-left">{{ item.position }}</td>
-                            <td class="py-2 px-2 text-left">{{ item.muhud.name }}</td>
-                            <td class="py-2 px-2 text-left">{{ item.text }}</td>
-                            <td class="py-2 px-2 text-left">{{ item.isDiwan ? 'Diwan' : 'Diba' }}</td>
-                            <td class="py-2 px-2 text-left">{{ item.translateId }}</td>
-                            <td class="py-2 px-2 text-left">{{ item.transliteration }}</td>
-                            <td class="py-2 text-center">
-                                <div class="inline-flex gap-2">
-                                    <div class="p-2 border w-fit rounded-md cursor-pointer bg-red-500 hover:bg-red-700"
-                                         @click="destroy(item.id)">
-                                        <TrashIcon class="w-6 text-white"/>
-                                    </div>
-                                    <div class="p-2 border w-fit rounded-md cursor-pointer bg-slate-500 hover:bg-slate-700"
-                                         @click="edit(item)">
-                                        <PencilSquareIcon class="w-6 text-white"/>
-                                    </div>
-                                </div>
-                            </td>
-                        </tr>
-                        </tbody>
-                    </table>
-                </div>
+                <!-- tab option -->
+                <TabGroup class="w-full mt-10" as="div">
+                    <TabList class="flex space-x-1 bg-slate-300 p-1">
+                        <Tab v-slot="{ selected }" class="w-full">
+                            <button
+                                :class="[
+                                  'w-full py-2.5 tracking-wider font-medium leading-5',
+                                  selected
+                                    ? 'bg-slate-800 text-white shadow rounded-md'
+                                    : 'text-slate-800 font-semibold hover:bg-white/[0.12] hover:text-white',
+                                ]"
+                            >
+                                Diwan
+                            </button>
+                        </Tab>
+                        <Tab v-slot="{ selected }" class="w-full">
+                            <button
+                                :class="[
+                                  'w-full py-2.5 tracking-wider font-medium leading-5',
+                                  selected
+                                    ? 'bg-slate-800 text-white shadow rounded-md'
+                                    : 'text-slate-800 font-semibold hover:bg-white/[0.12] hover:text-white',
+                                ]"
+                            >
+                                Syaraful Anam
+                            </button>
+                        </Tab>
+                    </TabList>
+                    <TabPanels>
+                        <TabPanel>
+                            <div class="overflow-auto mt-3 p-4 bg-white shadow-sm sm:rounded-lg">
+                                <table class="min-w-full table-auto">
+                                    <thead>
+                                    <tr class="border-b-2">
+                                        <th class="py-2 border-b font-medium text-left px-2 sm:px-0">Urutan</th>
+                                        <th class="py-2 border-b font-medium text-left px-2 sm:px-0">Muhud</th>
+                                        <th class="py-2 border-b font-medium text-left px-2 sm:px-0">Teks</th>
+                                        <th class="py-2 border-b font-medium text-left px-2 sm:px-0">Kitab</th>
+                                        <th class="py-2 border-b font-medium text-left px-2 sm:px-0">Terjemahan</th>
+                                        <th class="py-2 border-b font-medium text-left px-2 sm:px-0">Transliterasi</th>
+                                        <th class="py-2 border-b font-medium text-center px-2 sm:px-0">Action</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody v-if="textShalawat && textShalawat.length > 0">
+                                    <tr v-for="item in textShalawat.filter(i => i.isDiwan)" class="border-b-2 hover:bg-slate-200">
+                                        <td class="py-2 px-2 text-left">{{ item.position }}</td>
+                                        <td class="py-2 px-2 text-left">{{ item.muhud.name }}</td>
+                                        <td class="py-2 px-2 text-left">{{ item.text }}</td>
+                                        <td class="py-2 px-2 text-left">{{ item.isDiwan ? 'Diwan' : 'Diba' }}</td>
+                                        <td class="py-2 px-2 text-left">{{ item.translateId }}</td>
+                                        <td class="py-2 px-2 text-left">{{ item.transliteration }}</td>
+                                        <td class="py-2 text-center">
+                                            <div class="inline-flex gap-2">
+                                                <div class="p-2 border w-fit rounded-md cursor-pointer bg-red-500 hover:bg-red-700"
+                                                     @click="destroy(item.id)">
+                                                    <TrashIcon class="w-6 text-white"/>
+                                                </div>
+                                                <div
+                                                    class="p-2 border w-fit rounded-md cursor-pointer bg-slate-500 hover:bg-slate-700"
+                                                    @click="edit(item)">
+                                                    <PencilSquareIcon class="w-6 text-white"/>
+                                                </div>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </TabPanel>
+                        <TabPanel>
+                            <div class="overflow-auto mt-3 p-4 bg-white shadow-sm sm:rounded-lg">
+                                <table class="min-w-full table-auto">
+                                    <thead>
+                                    <tr class="border-b-2">
+                                        <th class="py-2 border-b font-medium text-left px-2 sm:px-0">Urutan</th>
+                                        <th class="py-2 border-b font-medium text-left px-2 sm:px-0">Muhud</th>
+                                        <th class="py-2 border-b font-medium text-left px-2 sm:px-0">Teks</th>
+                                        <th class="py-2 border-b font-medium text-left px-2 sm:px-0">Kitab</th>
+                                        <th class="py-2 border-b font-medium text-left px-2 sm:px-0">Terjemahan</th>
+                                        <th class="py-2 border-b font-medium text-left px-2 sm:px-0">Transliterasi</th>
+                                        <th class="py-2 border-b font-medium text-center px-2 sm:px-0">Action</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody v-if="textShalawat && textShalawat.length > 0">
+                                    <tr v-for="item in textShalawat.filter(i => !i.isDiwan)" class="border-b-2 hover:bg-slate-200">
+                                        <td class="py-2 px-2 text-left">{{ item.position }}</td>
+                                        <td class="py-2 px-2 text-left">{{ item.muhud.name }}</td>
+                                        <td class="py-2 px-2 text-left">{{ item.text }}</td>
+                                        <td class="py-2 px-2 text-left">{{ item.isDiwan ? 'Diwan' : 'Diba' }}</td>
+                                        <td class="py-2 px-2 text-left">{{ item.translateId }}</td>
+                                        <td class="py-2 px-2 text-left">{{ item.transliteration }}</td>
+                                        <td class="py-2 text-center">
+                                            <div class="inline-flex gap-2">
+                                                <div class="p-2 border w-fit rounded-md cursor-pointer bg-red-500 hover:bg-red-700"
+                                                     @click="destroy(item.id)">
+                                                    <TrashIcon class="w-6 text-white"/>
+                                                </div>
+                                                <div
+                                                    class="p-2 border w-fit rounded-md cursor-pointer bg-slate-500 hover:bg-slate-700"
+                                                    @click="edit(item)">
+                                                    <PencilSquareIcon class="w-6 text-white"/>
+                                                </div>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </TabPanel>
+                    </TabPanels>
+                </TabGroup>
             </div>
         </div>
 
