@@ -9,10 +9,19 @@ import {onMounted, ref} from "vue";
 import axios from "axios";
 import ResponsePopup from "@/Components/ResponsePopup.vue";
 import LoadingBanner from "@/Components/LoadingBanner.vue";
-import {Disclosure, DisclosureButton, DisclosurePanel} from "@headlessui/vue";
+import {
+    Disclosure,
+    DisclosureButton,
+    DisclosurePanel,
+    Tab,
+    TabGroup,
+    TabList,
+    TabPanel,
+    TabPanels
+} from "@headlessui/vue";
 import PrimaryButton from "@/Components/PrimaryButton.vue";
 import Form from "@/Pages/Audio/Form.vue";
-import {PencilSquareIcon, TrashIcon} from "@heroicons/vue/20/solid";
+import {TrashIcon} from "@heroicons/vue/20/solid";
 
 
 // variable
@@ -196,63 +205,151 @@ const stopAudio = () => {
                 </div>
             </div>
 
-            <!-- teks shalawat list -->
-            <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 mt-6">
-                <Disclosure v-for="item in textShalawat" v-slot="{open}">
-                    <DisclosureButton
-                        @click="getAudio(item.id)"
-                        class="py-4 px-6 w-full bg-white flex justify-between border-b ">
-                        <div class="text-left inline-flex gap-4">
-                            <div>{{item.id}}</div>
-                            <div class="font-amiri text-xl">{{item.text}}</div>
-                        </div>
-                        <ChevronUpIcon
-                            :class="open ? 'rotate-180 transform' : ''"
-                            class="h-5 w-5"
-                        />
-                    </DisclosureButton>
-                    <DisclosurePanel class="bg-white border-b w-full">
-                        <div class="w-full px-1 py-6">
-                            <table class="table-auto w-full">
-                                <thead>
-                                <tr class="border-b">
-                                    <th class="py-2 text-center">No.</th>
-                                    <th class="py-2 text-center">Pimpinan</th>
-                                    <th class="py-2 text-center">Deskripsi</th>
-                                    <th class="py-2 text-center">Action</th>
-                                </tr>
-                                </thead>
-                                <tbody>
-                                <tr v-for="(audio, index) in audios[item.id ?? 0]" class="border-b">
-                                    <td class="py-2 text-center">{{index + 1}}</td>
-                                    <td class="py-2 text-center">{{audio.pimpinan.name}}</td>
-                                    <td class="py-2 text-center">{{audio.description}}</td>
-                                    <td class="py-2 text-center">
-                                        <div class="inline-flex gap-2">
-                                            <div @click="playAudio(audio.path)" class="p-2 border w-fit rounded-md cursor-pointer bg-slate-900 hover:bg-red-700">
-                                                <PlayIcon class="w-6 text-white" />
-                                            </div>
-                                            <div @click="stopAudio()" class="p-2 border w-fit rounded-md cursor-pointer bg-slate-900 hover:bg-red-700">
-                                                <StopIcon class="w-6 text-white" />
-                                            </div>
-                                            <div @click="destroy(audio.id)" class="p-2 border w-fit rounded-md cursor-pointer bg-red-500 hover:bg-red-700">
-                                                <TrashIcon class="w-6 text-white" />
-                                            </div>
+            <!-- tab group -->
+            <TabGroup class="mx-auto max-w-7xl mt-10 px-4 sm:px-6 lg:px-8" as="div">
+                <TabList class="flex space-x-1 bg-slate-300 p-1">
+                    <Tab v-slot="{ selected }" class="w-full">
+                        <button
+                            :class="[
+                                  'w-full py-2.5 tracking-wider font-medium leading-5',
+                                  selected
+                                    ? 'bg-slate-800 text-white shadow rounded-md'
+                                    : 'text-slate-800 font-semibold hover:bg-white/[0.12] hover:text-white',
+                                ]"
+                        >
+                            Diwan
+                        </button>
+                    </Tab>
+                    <Tab v-slot="{ selected }" class="w-full">
+                        <button
+                            :class="[
+                                  'w-full py-2.5 tracking-wider font-medium leading-5',
+                                  selected
+                                    ? 'bg-slate-800 text-white shadow rounded-md'
+                                    : 'text-slate-800 font-semibold hover:bg-white/[0.12] hover:text-white',
+                                ]"
+                        >
+                            Syaraful Anam
+                        </button>
+                    </Tab>
+                </TabList>
+                <TabPanels>
+                    <TabPanel>
+                        <div class="mt-3">
+                            <Disclosure v-for="item in textShalawat.filter(i => i.isDiwan)" v-slot="{open}">
+                                <DisclosureButton
+                                    @click="getAudio(item.id)"
+                                    class="py-4 px-6 w-full bg-white flex justify-between border-b ">
+                                    <div class="text-left inline-flex gap-4">
+                                        <div>{{item.position}}</div>
+                                        <div class="font-amiri text-xl">{{item.text}}</div>
+                                    </div>
+                                    <ChevronUpIcon
+                                        :class="open ? 'rotate-180 transform' : ''"
+                                        class="h-5 w-5"
+                                    />
+                                </DisclosureButton>
+                                <DisclosurePanel class="bg-white border-b w-full">
+                                    <div class="w-full px-1 py-6">
+                                        <table class="table-auto w-full">
+                                            <thead>
+                                            <tr class="border-b">
+                                                <th class="py-2 text-center">No.</th>
+                                                <th class="py-2 text-center">Pimpinan</th>
+                                                <th class="py-2 text-center">Deskripsi</th>
+                                                <th class="py-2 text-center">Action</th>
+                                            </tr>
+                                            </thead>
+                                            <tbody>
+                                            <tr v-for="(audio, index) in audios[item.id ?? 0]" class="border-b">
+                                                <td class="py-2 text-center">{{index + 1}}</td>
+                                                <td class="py-2 text-center">{{audio.pimpinan.name}}</td>
+                                                <td class="py-2 text-center">{{audio.description}}</td>
+                                                <td class="py-2 text-center">
+                                                    <div class="inline-flex gap-2">
+                                                        <div @click="playAudio(audio.path)" class="p-2 border w-fit rounded-md cursor-pointer bg-slate-900 hover:bg-red-700">
+                                                            <PlayIcon class="w-6 text-white" />
+                                                        </div>
+                                                        <div @click="stopAudio()" class="p-2 border w-fit rounded-md cursor-pointer bg-slate-900 hover:bg-red-700">
+                                                            <StopIcon class="w-6 text-white" />
+                                                        </div>
+                                                        <div @click="destroy(audio.id)" class="p-2 border w-fit rounded-md cursor-pointer bg-red-500 hover:bg-red-700">
+                                                            <TrashIcon class="w-6 text-white" />
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                            </tbody>
+                                        </table>
+                                        <div class="mt-6 w-full inline-flex justify-center md:justify-end pr-4 mx-auto">
+                                            <PrimaryButton @click="[showModalAddAudio = true, selectedShalawat = item]">
+                                                Tambah Audio
+                                            </PrimaryButton>
                                         </div>
-                                    </td>
-                                </tr>
-                                </tbody>
-                            </table>
-                            <div class="mt-6 w-full inline-flex justify-center md:justify-end pr-4 mx-auto">
-                                <PrimaryButton @click="[showModalAddAudio = true, selectedShalawat = item]">
-                                    Tambah Audio
-                                </PrimaryButton>
-                            </div>
+                                    </div>
+                                </DisclosurePanel>
+                            </Disclosure>
                         </div>
-                    </DisclosurePanel>
-                </Disclosure>
-            </div>
-
+                    </TabPanel>
+                    <TabPanel>
+                        <div class="mt-3">
+                            <Disclosure v-for="item in textShalawat.filter(i => i.isDiba)" v-slot="{open}">
+                                <DisclosureButton
+                                    @click="getAudio(item.id)"
+                                    class="py-4 px-6 w-full bg-white flex justify-between border-b ">
+                                    <div class="text-left inline-flex gap-4">
+                                        <div>{{item.position}}</div>
+                                        <div class="font-amiri text-xl">{{item.text}}</div>
+                                    </div>
+                                    <ChevronUpIcon
+                                        :class="open ? 'rotate-180 transform' : ''"
+                                        class="h-5 w-5"
+                                    />
+                                </DisclosureButton>
+                                <DisclosurePanel class="bg-white border-b w-full">
+                                    <div class="w-full px-1 py-6">
+                                        <table class="table-auto w-full">
+                                            <thead>
+                                            <tr class="border-b">
+                                                <th class="py-2 text-center">No.</th>
+                                                <th class="py-2 text-center">Pimpinan</th>
+                                                <th class="py-2 text-center">Deskripsi</th>
+                                                <th class="py-2 text-center">Action</th>
+                                            </tr>
+                                            </thead>
+                                            <tbody>
+                                            <tr v-for="(audio, index) in audios[item.id ?? 0]" class="border-b">
+                                                <td class="py-2 text-center">{{index + 1}}</td>
+                                                <td class="py-2 text-center">{{audio.pimpinan.name}}</td>
+                                                <td class="py-2 text-center">{{audio.description}}</td>
+                                                <td class="py-2 text-center">
+                                                    <div class="inline-flex gap-2">
+                                                        <div @click="playAudio(audio.path)" class="p-2 border w-fit rounded-md cursor-pointer bg-slate-900 hover:bg-red-700">
+                                                            <PlayIcon class="w-6 text-white" />
+                                                        </div>
+                                                        <div @click="stopAudio()" class="p-2 border w-fit rounded-md cursor-pointer bg-slate-900 hover:bg-red-700">
+                                                            <StopIcon class="w-6 text-white" />
+                                                        </div>
+                                                        <div @click="destroy(audio.id)" class="p-2 border w-fit rounded-md cursor-pointer bg-red-500 hover:bg-red-700">
+                                                            <TrashIcon class="w-6 text-white" />
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                            </tbody>
+                                        </table>
+                                        <div class="mt-6 w-full inline-flex justify-center md:justify-end pr-4 mx-auto">
+                                            <PrimaryButton @click="[showModalAddAudio = true, selectedShalawat = item]">
+                                                Tambah Audio
+                                            </PrimaryButton>
+                                        </div>
+                                    </div>
+                                </DisclosurePanel>
+                            </Disclosure>
+                        </div>
+                    </TabPanel>
+                </TabPanels>
+            </TabGroup>
         </div>
 
         <!-- modal -->
