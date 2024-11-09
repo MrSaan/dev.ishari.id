@@ -213,7 +213,7 @@ const selectMuhud = (item: MuhudList) => {
                                     <tr v-for="item in textShalawat.filter(i => i.isDiwan)" class="border-b-2 hover:bg-slate-200">
                                         <td class="py-2 px-2 text-left">{{ item.position }}</td>
                                         <td class="py-2 px-2 text-left">{{ item.muhud.name }}</td>
-                                        <td class="py-2 px-2 text-left">{{ item.text }}</td>
+                                        <td class="py-2 px-2 text-left font-amiri">{{ item.text }}</td>
                                         <td class="py-2 px-2 text-left">{{ item.isDiwan ? 'Diwan' : 'Diba' }}</td>
                                         <td class="py-2 px-2 text-left">{{ item.translateId }}</td>
                                         <td class="py-2 px-2 text-left">{{ item.transliteration }}</td>
@@ -250,10 +250,10 @@ const selectMuhud = (item: MuhudList) => {
                                     </tr>
                                     </thead>
                                     <tbody v-if="textShalawat && textShalawat.length > 0">
-                                    <tr v-for="item in textShalawat.filter(i => !i.isDiwan)" class="border-b-2 hover:bg-slate-200">
+                                    <tr v-for="item in textShalawat.filter(i => i.isDiba)" class="border-b-2 hover:bg-slate-200">
                                         <td class="py-2 px-2 text-left">{{ item.position }}</td>
                                         <td class="py-2 px-2 text-left">{{ item.muhud.name }}</td>
-                                        <td class="py-2 px-2 text-left">{{ item.text }}</td>
+                                        <td class="py-2 px-2 text-left font-amiri">{{ item.text }}</td>
                                         <td class="py-2 px-2 text-left">{{ item.isDiwan ? 'Diwan' : 'Diba' }}</td>
                                         <td class="py-2 px-2 text-left">{{ item.translateId }}</td>
                                         <td class="py-2 px-2 text-left">{{ item.transliteration }}</td>
